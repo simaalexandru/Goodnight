@@ -8,6 +8,7 @@ import {
   Alert,
   ListView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   FlatList,
   ListItem,
@@ -19,7 +20,8 @@ import DatePicker from 'react-native-datepicker';
 import PropTypes from 'prop-types';
 import { StackNavigation } from 'react-navigation';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-
+import { LinearGradient } from 'expo';
+import { Icon } from 'react-native-elements';
 
 // var radio_props = [
 //   {label: 'Baiat', value: 'Baiat' },
@@ -57,8 +59,10 @@ export default class HomeScreen extends React.Component {
     var usersRef = firebase.database().ref('user/' + currentUserId + '/child');
     usersRef.on('value', (snapshot) => {
       var copii = [];
+      
       //console.log(snapshot.val())
       snapshot.forEach((child) => {
+        // var storyList= this.getStoryList(child.key);
         copii.push({
           id: child.key,
           name: child.val().childName,
@@ -74,11 +78,11 @@ export default class HomeScreen extends React.Component {
   }
 
   //opening the ChildInfo screen and transfering child's data
-  _onPressItem = () => {
-    this.props.navigation.navigate('ChildInfo', {
-      currentChld: currentChild
-    })
-  };
+  // _onPressItem = () => {
+  //   this.props.navigation.navigate('ChildInfo', {
+  //     currentChld: currentChild
+  //   })
+  // };
 
   //accessing the storyList array from db 
   //getting the stories values and adding them to my state array (storyList)
@@ -90,7 +94,8 @@ export default class HomeScreen extends React.Component {
       var povesti = [];
       snapshot.forEach((story) => {
         povesti.push({
-          id: story.val().id,
+          id:story.key,
+          name: story.val().name,
           currentPage: story.val().currentPage
         })
       })
@@ -114,60 +119,81 @@ export default class HomeScreen extends React.Component {
         //console.log(item);
         if (item.sex === 'Fata') {
 
-          //  this._renderItemGirl=({item})
-          return (<TouchableOpacity onPress={() => { this._onPressItem(item) }}>
-            <View style={styles.childStyling}>
-              <Text style={styles.nameChild}>{item.name}</Text>
-              <Image
-                style={styles.avatar}
-                source={require('../assets/images/girl.png')} />
-            </View>
-          </TouchableOpacity>)
+          this._renderItemGirl = ({ item })
+          return (
+            <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
+              <LinearGradient
+                colors={['#ff9a9e','#fecfef']}
+                style={styles.childStyling}
+                start={[0, 0.5]}
+                end={[1, 0.5]}
+              >
+                <Text style={styles.nameChild}>{item.name}</Text>
+                {<Image
+                  style={styles.avatar}
+                  source={require('../assets/images/girl.png')} />}
+              </LinearGradient>
+            </TouchableWithoutFeedback>
+          )
         }
         else {
           return (
-            <TouchableOpacity onPress={() => { this._onPressItem(item) }}>
-              <View style={styles.childStyling}>
+            <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
+              <LinearGradient
+                colors={['#30cfd0','#c3dff5']}
+                style={styles.childStyling}
+                start={[0, 0.5]}
+                end={[1, 0.5]}
+              >
                 <Text style={styles.nameChild}>{item.name}</Text>
-                <Image
+                {<Image
                   style={styles.avatar}
-                  source={require('../assets/images/boy.png')} />
-              </View>
-            </TouchableOpacity>)
+                  source={require('../assets/images/boy.png')} />}
+              </LinearGradient>
+            </TouchableWithoutFeedback>
+          )
         }
       }
       }
     />
   }
 
-  //opens the ChildInfo screen of the selected child
+
+  //opens the StoryList screen of the selected child
   //transferring the currentChild info through state
   _onPressItem = (currentChild) => {
-    this.props.navigation.navigate('ChildInfo', {
-      currentChild: currentChild
-    })
-  };
+    this.props.navigation.navigate('StoryList', {
+      currentChild: currentChild,
+   })
+};
 
   render() {
     const { navigate } = this.props.navigation;
-    
+
     return (
       <View style={styles.container}>
+       <View style={styles.containerText}>
+        <Text style={styles.title}>Lista copiilor</Text>
+       </View>
+       <ScrollView style={{height:370}}>
         {this.returnKids()}
-        <Button onPress={() => navigate('AddChild')}
-          title='Add New Child'
-          buttonStyle={{
-            backgroundColor: "rgba(177, 32, 204, 9)",
-            width: '100%',
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderColor: "transparent",
-            borderWidth: 0,
-            borderRadius: 25,
-            marginBottom: 20,
-          }}
-        />
+       </ScrollView>
+        <View style={styles.containerButton}>
+          <TouchableOpacity
+            onPress= {() =>  navigate('AddChild')}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 50,
+              height: 50,
+              backgroundColor: '#521987',
+              borderRadius: 100,
+            }}
+          >
+            <Icon name={"add"} size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
       </View>
     );
   }
@@ -180,8 +206,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#7f7fd5',
   },
+  containerText: {
+    backgroundColor:'#521987', 
+    height:65, 
+    width:'100%',
+    marginTop:23
+  },
+  containerButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   listContainer: {
-    marginTop: '10%',
     marginLeft: '5%',
     marginRight: '5%'
   },
@@ -190,23 +226,31 @@ const styles = StyleSheet.create({
     height: 50,
   },
   childStyling: {
-    height: 80,
-    marginTop: '2%',
+    height: 100,
+    marginTop: '5%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingLeft: '5%',
     paddingRight: '5%',
-    paddingTop: '5%',
-    alignContent: 'spaceAround',
-    backgroundColor: '#333',
-    borderWidth: 1,
-    borderColor: '#ffffff',
-    borderRadius: 15
+    paddingTop: '8%',
+    borderRadius: 10,
+    // alignContent: 'spaceAround', //  CRUSH ON ANDROID
+    backgroundColor: 'transparent',
   },
   nameChild: {
-    fontSize: 22,
+    fontSize: 28,
+    backgroundColor: 'transparent',
+    marginTop: '2%',
     color: '#ffffff',
-    marginTop: '3%'
+    fontWeight: 'bold',
+  },
+  title: {
+    marginTop:'4%',
+    textAlign: 'center',
+    fontSize: 30,
+    color: '#ffffff',
+    fontWeight: '500',
+    fontWeight: 'bold',
   },
 });

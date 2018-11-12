@@ -6,16 +6,6 @@ import { StackNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FormLabel, Input, Button, FormInput, FormValidationMessage } from 'react-native-elements';
 
-// firebase.initializeApp({
-//     apiKey: "AIzaSyDO0bDMYykXmXlk7mMtNW4mKN3RZnu_M_s",
-//     authDomain: "goodnight-de58f.firebaseapp.com",
-//     databaseURL: "https://goodnight-de58f.firebaseio.com",
-//     projectId: "goodnight-de58f",
-//     storageBucket: "goodnight-de58f.appspot.com",
-//     messagingSenderId: "167348977707"
-// }
-// );
-
 export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -48,28 +38,30 @@ export default class LoginScreen extends React.Component {
         const { navigate } = this.props.navigation;
 
         if (this.state.loading) {
-            return <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#b20000' }}
+            return <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#530c39' }}
             >Loading</Text>
         }
         return <View style={styles.buttons}>
                 <Button onPress={this.onLoginPress.bind(this)}
                     title='Autentificare'
                     buttonStyle={{
-                      backgroundColor: "rgba(177, 32, 204, 9))",
+                      backgroundColor: "#521987",
                       width: 300,
-                      height: 45,
+                      height: 55,
                       borderColor: "transparent",
                       borderWidth: 0,
                       borderRadius: 25,
                       marginTop:25,
                       marginBottom:15,
+                      titleSize:24
                      }}
+                     textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
                     />
 
                 <View style={styles.bottomText}>
                  <Text style={{color:'white', fontSize: 16 }}>Nu esti inregistrat?</Text>
                  <Text onPress={() =>  navigate('Register')}
-                     style={{ color:'rgba(177, 32, 204, 9)', paddingLeft:5,fontSize: 16 }}>
+                     style={{ color:'#521987', paddingLeft:5,fontSize: 16 }}>
                      Inregistreaza-te</Text>
                 </View>
               </View>
@@ -82,28 +74,28 @@ export default class LoginScreen extends React.Component {
       
          <View>
                 <Image
-                    style={{ width: 190, height: 70, marginTop:'20%' }}
+                    style={{ width: 190, height: 70, marginTop:'20%'}}
                     source={require('../assets/images/Nick_(Logo).png')}
                 />
         </View>
 
          <View style={styles.form}>     
-            <FormLabel labelStyle={{ fontSize: 16, color: 'white' }}>E-mail</FormLabel>
+            <FormLabel labelStyle={{fontSize:24, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
             <FormInput
-                inputStyle={{ width: 300, color: 'white' }}
+                inputStyle={{ width: 300, color: 'white',}}
                 onChangeText={email => this.setState({ email })}
                 placeholderTextColor='white'
             />
 
-            <FormLabel labelStyle={{ fontSize: 16, color: 'white'}}>Parola </FormLabel>
+            <FormLabel labelStyle={{fontSize:24, color: 'white', fontWeight: '400'}}>Parola </FormLabel>
             <FormInput
-                inputStyle={{ width: 300, color: 'white',  }}
+                inputStyle={{ width: 300, color: 'white', }}
                 secureTextEntry
                 placeholderTextColor='white'
                 onChangeText={password => this.setState({ password })} />
-            <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#b20000' }}>{this.state.error}</Text>
+            <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#521987' }}>{this.state.error}</Text>
+            </View>
             {this.renderButtonOrLoading()}
-         </View>
      </View>
     )
     }
@@ -128,4 +120,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent: 'center',
     },
+    buttons: {
+        marginBottom:'5%'
+    }
   });
