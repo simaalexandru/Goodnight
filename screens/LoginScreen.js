@@ -38,7 +38,7 @@ export default class LoginScreen extends React.Component {
         const { navigate } = this.props.navigation;
 
         if (this.state.loading) {
-            return <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#530c39' }}
+            return <Text style={{ marginTop:'2%',fontSize: 16, color:'#530c39' }}
             >Loading</Text>
         }
         return <View style={styles.buttons}>
@@ -74,13 +74,13 @@ export default class LoginScreen extends React.Component {
       
          <View>
                 <Image
-                    style={{ width: 190, height: 70, marginTop:'20%'}}
-                    source={require('../assets/images/Nick_(Logo).png')}
+                    style={{ width: 300, height: 200, marginTop:'15%'}}
+                    source={require('../assets/images/LogoRaft.png')}
                 />
         </View>
 
          <View style={styles.form}>     
-            <FormLabel labelStyle={{fontSize:24, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
+            <FormLabel labelStyle={{ fontSize:24, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
             <FormInput
                 inputStyle={{ width: 300, color: 'white',}}
                 onChangeText={email => this.setState({ email })}

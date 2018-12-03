@@ -59,7 +59,7 @@ export default class HomeScreen extends React.Component {
     var usersRef = firebase.database().ref('user/' + currentUserId + '/child');
     usersRef.on('value', (snapshot) => {
       var copii = [];
-      
+
       //console.log(snapshot.val())
       snapshot.forEach((child) => {
         // var storyList= this.getStoryList(child.key);
@@ -94,7 +94,7 @@ export default class HomeScreen extends React.Component {
       var povesti = [];
       snapshot.forEach((story) => {
         povesti.push({
-          id:story.key,
+          id: story.key,
           name: story.val().name,
           currentPage: story.val().currentPage
         })
@@ -123,15 +123,32 @@ export default class HomeScreen extends React.Component {
           return (
             <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
               <LinearGradient
-                colors={['#ff9a9e','#fecfef']}
+                colors={['#ff9a9e', '#fecfef']}
                 style={styles.childStyling}
                 start={[0, 0.5]}
                 end={[1, 0.5]}
               >
-                <Text style={styles.nameChild}>{item.name}</Text>
-                {<Image
-                  style={styles.avatar}
-                  source={require('../assets/images/girl.png')} />}
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
+                  {<Image
+                    style={styles.avatar}
+                    source={require('../assets/images/girl.png')} />}
+                  <Text style={styles.nameChild}>{item.name}</Text>
+                </View>
+                <View style={{ marginTop: '2%', marginRight: '2%' }}>
+                  <TouchableOpacity
+                    onPress={() => { this._onPressButton(item) }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      backgroundColor: '#521987',
+                      borderRadius: 100,
+                    }}
+                  >
+                    <Icon name={"edit"} size={15} color="#fff" />
+                  </TouchableOpacity>
+                </View>
               </LinearGradient>
             </TouchableWithoutFeedback>
           )
@@ -140,17 +157,35 @@ export default class HomeScreen extends React.Component {
           return (
             <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
               <LinearGradient
-                colors={['#30cfd0','#c3dff5']}
+                colors={['#30cfd0', '#c3dff5']}
                 style={styles.childStyling}
                 start={[0, 0.5]}
                 end={[1, 0.5]}
               >
-                <Text style={styles.nameChild}>{item.name}</Text>
-                {<Image
-                  style={styles.avatar}
-                  source={require('../assets/images/boy.png')} />}
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
+                  {<Image
+                    style={styles.avatar}
+                    source={require('../assets/images/boy.png')} />}
+                  <Text style={styles.nameChild}>{item.name}</Text>
+                </View>
+                <View style={{ marginTop: '2%', marginRight: '2%' }}>
+                  <TouchableOpacity
+                    onPress={() => { this._onPressButton(item) }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      backgroundColor: '#521987',
+                      borderRadius: 100,
+                    }}
+                  >
+                    <Icon name={"edit"} size={15} color="#fff" />
+                  </TouchableOpacity>
+                </View>
               </LinearGradient>
             </TouchableWithoutFeedback>
+                
           )
         }
       }
@@ -164,23 +199,29 @@ export default class HomeScreen extends React.Component {
   _onPressItem = (currentChild) => {
     this.props.navigation.navigate('StoryList', {
       currentChild: currentChild,
-   })
-};
+    })
+  };
+
+  _onPressButton = (currentChild) => {
+    this.props.navigation.navigate('EditChild', {
+      currentChild: currentChild,
+    })
+  };
 
   render() {
     const { navigate } = this.props.navigation;
 
     return (
       <View style={styles.container}>
-       <View style={styles.containerText}>
-        <Text style={styles.title}>Lista copiilor</Text>
-       </View>
-       <ScrollView style={{height:370}}>
-        {this.returnKids()}
-       </ScrollView>
+        <View style={styles.containerText}>
+          <Text style={styles.title}>Lista copiilor</Text>
+        </View>
+        <ScrollView style={{ height: 370 }}>
+          {this.returnKids()}
+        </ScrollView>
         <View style={styles.containerButton}>
           <TouchableOpacity
-            onPress= {() =>  navigate('AddChild')}
+            onPress={() => navigate('AddChild')}
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -207,10 +248,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#7f7fd5',
   },
   containerText: {
-    backgroundColor:'#521987', 
-    height:65, 
-    width:'100%',
-    marginTop:23
+    backgroundColor: '#521987',
+    height: 65,
+    width: '100%',
+    marginTop: 23
   },
   containerButton: {
     flex: 1,
@@ -225,6 +266,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  nameChild: {
+    fontSize: 28,
+    backgroundColor: 'transparent',
+    marginTop: '4%',
+    marginLeft: '10%',
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
   childStyling: {
     height: 100,
     marginTop: '5%',
@@ -232,21 +281,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingLeft: '5%',
-    paddingRight: '5%',
-    paddingTop: '8%',
+    // paddingRight: '5%',
     borderRadius: 10,
     // alignContent: 'spaceAround', //  CRUSH ON ANDROID
     backgroundColor: 'transparent',
   },
-  nameChild: {
-    fontSize: 28,
-    backgroundColor: 'transparent',
-    marginTop: '2%',
-    color: '#ffffff',
-    fontWeight: 'bold',
-  },
   title: {
-    marginTop:'4%',
+    marginTop: '4%',
     textAlign: 'center',
     fontSize: 30,
     color: '#ffffff',

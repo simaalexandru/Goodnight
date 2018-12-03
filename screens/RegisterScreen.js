@@ -118,7 +118,7 @@ export default class RegisterScreen extends React.Component {
         this.setState({error:'Utilizatorul a fost inregistrat cu succes.', loading:false})
         setTimeout(() => { 
             this.props.navigation.navigate('Login');
-          }, 1000)
+          }, 1500)
         } 
     }
 

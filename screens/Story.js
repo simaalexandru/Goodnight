@@ -113,6 +113,7 @@ export default class Story extends React.Component {
                            title='<'
                            buttonStyle={styles.buttonPrevious}
                            />
+                      <Text style={styles.pageNumber}>{story.listOfPages[this.state.index].number}</Text>
                       <Button onPress={this.nextPage.bind(this)}
                        title='>'
                        buttonStyle={styles.buttonNext}
@@ -129,11 +130,13 @@ export default class Story extends React.Component {
                       <Text style={styles.storyText}>{replacement}</Text>
                       </ScrollView>
                       <View style={styles.buttonContainerFirst}>
+                      <Text style={styles.pageNumberFirst}>{story.listOfPages[this.state.index].number}</Text>
                       <Button onPress={this.nextPage.bind(this)}
                        title='>'
                        buttonStyle={styles.buttonNext}
                        />
                      </View>
+          
                     </View>
                 )
             }
@@ -149,6 +152,11 @@ export default class Story extends React.Component {
                            title='<'
                            buttonStyle={styles.buttonPrevious}
                            />
+                       <Text style={styles.pageNumberLast}>{story.listOfPages[this.state.index].number}</Text>
+                       <Button onPress={this._onPressButton.bind(this)}
+                             title='Test'
+                             buttonStyle={styles.buttonQuiz}
+                         />
                        </View>
                     </View>
                 )
@@ -168,9 +176,10 @@ export default class Story extends React.Component {
                                title='<'
                                buttonStyle={styles.buttonPrevious}
                                />
+                          <Text style={styles.pageNumber}>{story.listOfPages[this.state.index].number}</Text>
                           <Button onPress={this.nextPage.bind(this)}
                            title='>'
-                           buttonStyle={styles.buttonNext}
+                               buttonStyle={styles.buttonNext}
                            />
                          </View>
                         </View>
@@ -184,6 +193,7 @@ export default class Story extends React.Component {
                           <Text style={styles.storyText}>{replacement}</Text>
                           </ScrollView>
                           <View style={styles.buttonContainerFirst}>
+                          <Text style={styles.pageNumberFirst}>{story.listOfPages[this.state.index].number}</Text>
                           <Button onPress={this.nextPage.bind(this)}
                            title='>'
                            buttonStyle={styles.buttonNext}
@@ -196,16 +206,21 @@ export default class Story extends React.Component {
                 if(this.state.index == story.numberOfPages-1){
                     return (
                         <View style={{marginTop:'5%', marginLeft:'5%', marginRight:'5%'}}>
-                         <ScrollView style={{height:200}}>
-                          <Text style={styles.storyText}>{replacement}</Text>
-                          </ScrollView>
-                          <View style={styles.buttonContainerLast}>
-                           <Button onPress={this.prevPage.bind(this)}
-                               title='<'
-                               buttonStyle={styles.buttonPrevious}
-                               />   
-                          </View>        
-                        </View>
+                        <ScrollView style={{height:200}}>
+                        <Text style={styles.storyText}>{replacement}</Text>
+                        </ScrollView>
+                        <View style={styles.buttonContainer}>
+                        <Button onPress={this.prevPage.bind(this)}
+                             title='<'
+                             buttonStyle={styles.buttonPrevious}
+                             />
+                        <Text style={styles.pageNumberLast}>{story.listOfPages[this.state.index].number}</Text>
+                        <Button onPress={this._onPressButton.bind(this)}
+                             title='Test'
+                             buttonStyle={styles.buttonQuiz}
+                         />
+                       </View>
+                      </View>
                     )
                 }
         }
@@ -222,6 +237,12 @@ export default class Story extends React.Component {
     this.setState({ index: this.state.index-1 });
        this.displayStoryText();
    }
+
+   _onPressButton = (currentPage) => {
+    this.props.navigation.navigate('Quiz', {
+      currentPage: this.props.navigation.state.params.currentPage
+    })
+  };
 
     render() {
         const { navigate } = this.props.navigation;
@@ -246,7 +267,7 @@ export default class Story extends React.Component {
                     >
                         <Icon name={"arrow-back"} size={30} color="#fff" />
                     </TouchableOpacity>
-                    <Text style={styles.title}>Raft de carti</Text>
+                    <Text style={styles.title}>{story.name}</Text>
                 </View>
                 <Image
                     style={styles.avatar}
@@ -288,16 +309,19 @@ const styles = StyleSheet.create({
         color:'#FFFFFF'
     },
     buttonContainer:{
-      flexDirection:'row', justifyContent:'space-between'
+      flexDirection:'row', 
+      justifyContent:'space-between'
     },
     buttonContainerFirst:{
-        flexDirection:'row', justifyContent:'flex-end'
+        flexDirection:'row', 
+        justifyContent:'flex-end'
     },
     buttonContainerLast:{
-        flexDirection:'row', justifyContent:'flex-start'
+        flexDirection:'row',
+        justifyContent:'flex-start'
     },
     buttonNext:{
-        backgroundColor: "rgba(177, 32, 204, 9)",
+        backgroundColor: "#521987",
         width: 50,
         height: 50,
         fontSize:12,
@@ -305,10 +329,10 @@ const styles = StyleSheet.create({
         borderColor: "transparent",
         borderWidth: 0,
         borderRadius: 25,
-        marginBotoom:20,
+        marginBottom:20,
     },
     buttonPrevious:{
-        backgroundColor: "rgba(177, 32, 204, 9)",
+        backgroundColor: "#521987",
         width: 50,
         height: 50,
         fontSize:12,
@@ -316,8 +340,39 @@ const styles = StyleSheet.create({
         borderColor: "transparent",
         borderWidth: 0,
         borderRadius: 25,
-        position: 'fixed',
         marginBottom:20,
+    },
+    buttonQuiz:{
+        backgroundColor: "#521987",
+        width: 80,
+        height: 50,
+        fontSize:12,
+        fontWeight:'bold',
+        borderColor: "transparent",
+        borderWidth: 0,
+        borderRadius: 25,
+        marginBottom:20,
+    },
+    pageNumber: {
+        color: "#f0f0f0",
+        fontSize:16,
+        fontWeight:'bold',
+        marginTop:'4%',
+    },
+    pageNumberLast: {
+        marginLeft:'25%',
+        marginRight:'17%',
+        color: "#f0f0f0",
+        fontSize:16,
+        fontWeight:'bold',
+        marginTop:'4%',
+    },
+    pageNumberFirst: {
+        marginRight:'25%',
+        color: "#f0f0f0",
+        fontSize:16,
+        fontWeight:'bold',
+        marginTop:'4%',
     },
     avatar: {
         width: '100%',

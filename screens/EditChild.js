@@ -27,24 +27,27 @@ var radio_props = [
     { label: 'Fata', value: 'Fata' }
 ];
 
-export default class AddChild extends React.Component {
+export default class EditChild extends React.Component {
     static navigationOptions = {
         header: null,
     };
 
+
     constructor(props) {
         super(props);
+        const child = this.props.navigation.state.params.currentChild;
         this.state = {
-            childName: '', childAge: '',
-            childSex: '', storyList: '',
+            childName: child.name, childAge: child.age,
+            childSex: child.sex, storyList: '',
             error: '', currentUserKids: [],
-            date: '04-24-2015'
+            date: child.age,
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        const child = this.props.navigation.state.params.currentChild;
     }
 
     componentWillUnmount() {
@@ -81,27 +84,43 @@ export default class AddChild extends React.Component {
         return i
     }
 
-    registerChild() {
+    editChild() {
         if (this.ValidateForm() === 1) {
             var user = firebase.auth().currentUser;
             const { childName, childAge, childSex, storyList } = this.state;
-            firebase.database().ref('user/' + user.uid + '/child').push({
-                childName: childName,
-                childAge: childAge,
-                childSex: childSex,
-                storyList: storyList
+            firebase.database().ref('user/' + user.uid + '/child/' + this.props.navigation.state.params.currentChild.id + '/').update({
+                childName,
+                childAge,
+                childSex
             })
                 .catch(() => {
-                    this.setState({ error: 'Inregistrarea copilului esuata.' });
+                    this.setState({ error: 'Editarea copilului esuata.' });
                 })
-            this.setState({ error: 'Copilul a fost inregistrat cu succes.', loading: false })
-            setTimeout(() => { 
+            this.setState({ error: 'Copilul a fost editat cu succes.', loading: false })
+            setTimeout(() => {
                 this.props.navigation.navigate('Home');
-              }, 1000)
+            }, 1000)
         }
     }
 
+    removeChild() {
+            var user = firebase.auth().currentUser;
+            const { childName, childAge, childSex, storyList } = this.state;
+            firebase.database().ref('user/' + user.uid + '/child/' + this.props.navigation.state.params.currentChild.id)
+            .remove()
+                .catch(() => {
+                    this.setState({ error: 'Stergerea copilului esuata.' });
+                })
+            this.setState({ error: 'Copilul a fost sters cu succes.', loading: false })
+            setTimeout(() => {
+                this.props.navigation.navigate('Home');
+            }, 1000)
+    }
+
     render() {
+        console.log(this.props.navigation.state.params.currentChild);
+
+        const child = this.props.navigation.state.params.currentChild;
         return (
             <View style={styles.container}>
                 <View style={styles.containerText}>
@@ -118,13 +137,14 @@ export default class AddChild extends React.Component {
                     >
                         <Icon name={"arrow-back"} size={30} color="#fff" />
                     </TouchableOpacity>
-                    <Text style={styles.title}>Adauga copil</Text>
+                    <Text style={styles.title}>Editeaza copil</Text>
                 </View>
                 <View style={styles.form}>
                     <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
                     <FormInput
                         inputStyle={{ width: '100%', color: '#ffffff', borderBottomColor: '#ffffff' }}
                         onChangeText={childName => this.setState({ childName })}
+                        placeholder={this.props.navigation.state.params.currentChild.name}
                         placeholderTextColor='white'
                         containerStyle={{ borderBottomColor: '#ffffff' }}
                         underlineColorAndroid="#ffffff"
@@ -138,7 +158,7 @@ export default class AddChild extends React.Component {
                     <DatePicker
                         style={{ width: '95%', color: '#ffffff' }}
                         showIcon={false}
-                        date={this.state.date}
+                        date={this.props.navigation.state.params.currentChild.age}
                         mode="date"
                         format="MM-DD-YYYY"
                         minDate={"01-01-2001"}
@@ -178,7 +198,7 @@ export default class AddChild extends React.Component {
                     <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Sexul copilului</FormLabel>
                     <RadioForm
                         style={styles.radioButtons}
-                        initial={'Baiat'}
+                        initial={this.props.navigation.state.params.currentChild.sex === 'Baiat' ? 0 : 1}
                         radio_props={radio_props}
                         formHorizontal={true}
                         buttonSize={10}
@@ -194,21 +214,34 @@ export default class AddChild extends React.Component {
                     />
                 </View>
                 <Text style={{ marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#521987' }}>{this.state.error}</Text>
-                <Button onPress={this.registerChild.bind(this)}
-                    title='Inregistrare'
-                    buttonStyle={{
-                      backgroundColor: "#521987",
-                      width: '100%',
-                      height: 55,
-                      borderColor: "transparent",
-                      borderWidth: 0,
-                      borderRadius: 25,
-                      marginTop:25,
-                      marginBottom:15,
-                      titleSize:24
-                     }}
-                     textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
-                />
+                <View style={{flexDirection:'row', justifyContent:'space-between',marginLeft:'5%', marginRight:'5%'}}>
+                <TouchableOpacity
+                    onPress={this.editChild.bind(this)}
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 70,
+                        height: 70,
+                        backgroundColor: '#521987',
+                        borderRadius: 100,
+                    }}
+                >
+                    <Icon name={"save"} size={40} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={this.removeChild.bind(this)}
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 70,
+                        height: 70,
+                        backgroundColor: '#521987',
+                        borderRadius: 100,
+                    }}
+                >
+                    <Icon name={"delete"} size={40} color="#fff" />
+                </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -229,7 +262,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     title: {
-        marginTop:'4%',
+        marginTop: '4%',
         fontSize: 30,
         color: '#ffffff',
         fontWeight: '500',
@@ -242,7 +275,7 @@ const styles = StyleSheet.create({
     },
     form: {
         marginTop: '15%',
-        marginBottom:'35%'
+        marginBottom: '35%'
     },
     text: {
         color: 'red',
@@ -260,3 +293,6 @@ const styles = StyleSheet.create({
         color: 'green'
     },
 });
+
+
+

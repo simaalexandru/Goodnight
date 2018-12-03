@@ -62,50 +62,41 @@ export default class StoryDetail extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.containerText}>
-                    <TouchableOpacity
+                    <TouchableWithoutFeedback
                         onPress={this.handleBackButtonClick.bind(this)}
                         style={styles.backButton}
                     >
                         <Icon name={"arrow-back"} size={30} color="#fff" />
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                     <Text style={styles.title}>{story.name}</Text>
                 </View>
-                <Image
+                 <Image
                     style={styles.avatar}
-                    source={{ uri: story.coverPicture }} />
-                <View style={{ marginLeft: '5%', marginRight: '5%', marginTop:'2%',}}>
-                    <Text style={{color:'#ffffff', fontSize:'16'}}>Descriere poveste</Text> 
-                    <Text style={styles.description}>{story.descriere}</Text>
-                  <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:'3%', marginBottom:'5%'}}>
-                     <View style={{flexDirection:'column'}}>
-                     <Text style={{color:'#ffffff', fontSize:'16', alignSelf:'center'}}>
-                       Numar de pagini
-                    </Text> 
-                    <Text style={{color:'#ffffff', fontSize:'32', alignSelf:'center'}}>
-                      {story.numberOfPages}
-                    </Text> 
-                    </View>
-                    <View style={{flexDirection:'column'}}>
-                     <Text style={{color:'#ffffff', fontSize:'16',alignSelf:'center'}}>
-                       Varsta recomandata
-                    </Text> 
-                    <Text style={{color:'#ffffff', fontSize:'32', alignSelf:'center'}}>
-                      3-5
-                    </Text> 
-                    </View>
-                  </View>
-              
-                    <Button onPress={this._onPressStory.bind(this)}
-                        title='Citeste povestea'
-                        buttonStyle={styles.button}
-                        textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+                    source={{ uri: story.coverPicture }} /> 
+                <ScrollView style={{ marginLeft: '5%', marginRight: '5%', marginTop:'2%'}}>
+                  <Text style={styles.description}>Descriere poveste</Text>  
+                  <Text style={styles.descriptionText}>{story.description}</Text>
+                  <View style={{ flexDirection:'row', justifyContent:'space-between', marginTop:'5%'}}>
+                  <View style={{ flexDirection:'column'}}>
+                    <Text style={{fontSize:18, color:'#f0f0f0', alignSelf:'center'}}>Numar de pagini</Text> 
+                    <Text style={{fontSize:32, color:'#f0f0f0', alignSelf:'center'}}>{story.numberOfPages}</Text>  
+                 </View>
+                 <View style={{ flexDirection:'column'}}>
+                    <Text style={{fontSize:18, color:'#f0f0f0', alignSelf:'center'}}>Varsta recomandata</Text> 
+                    <Text style={{fontSize:32, color:'#f0f0f0', alignSelf:'center'}}>{story.recommendedAge}</Text>  
+                 </View>
+                 </View>
+                <Button onPress={this._onPressStory.bind(this)}
+                 title='Citeste povestea'
+                 buttonStyle={styles.button}
+                 textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
                     />
-              
-                </View>
-            </View>
+                </ScrollView>
+          </View>
         );
     }
 }
+
 
 
 
@@ -121,11 +112,16 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
     },
-    description: {
-        color: '#ffffff',
-        fontSize:12,
+    containerInfo: {
+        flexDirection:'column'
+    },
+    descriptionText:{
+     color:'#f0f0f0'
+    },
+    description:{
+        color:'#f0f0f0',
+        fontSize:18,
         marginBottom:'2%'
-        
     },
     button: {
         backgroundColor: "#521987",
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
         borderColor: "transparent",
         borderWidth: 0,
         borderRadius: 25,
-        marginTop:20,
+        marginTop:10,
         titleSize: 24
     },
     backButton:{
@@ -151,9 +147,10 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '500',
         fontWeight: 'bold',
+        marginLeft:'17%'
     },
     avatar: {
         width: '100%',
-        height: 300,
+        height: 330,
     },
 });

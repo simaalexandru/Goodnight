@@ -12,7 +12,9 @@ import RegisterScreen from '../screens/RegisterScreen';
 import AddChild from '../screens/AddChild';
 import StoryList from '../screens/StoryList';
 import Story from '../screens/Story';
-import StoryDetail from '../screens/StoryDetail'
+import StoryDetail from '../screens/StoryDetail';
+import EditChild from '../screens/EditChild';
+import Quiz from '../screens/Quiz';
 
 const HomeStack = createStackNavigator({
   Login: LoginScreen,
@@ -21,7 +23,9 @@ const HomeStack = createStackNavigator({
   AddChild: AddChild,
   StoryList: StoryList,
   Story: Story,
-  StoryDetail: StoryDetail
+  StoryDetail: StoryDetail,
+  EditChild: EditChild,
+  Quiz: Quiz
 });
 
 HomeStack.navigationOptions = {
