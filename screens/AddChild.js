@@ -112,7 +112,7 @@ export default class AddChild extends React.Component {
                             marginRight: '15%',
                             width: 45,
                             height: 45,
-                            backgroundColor: '#521987',
+                            backgroundColor: '#3F3470',
                             borderRadius: 100,
                         }}
                     >
@@ -121,20 +121,22 @@ export default class AddChild extends React.Component {
                     <Text style={styles.title}>Adauga copil</Text>
                 </View>
                 <View style={styles.form}>
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
+                    <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
                     <FormInput
-                        inputStyle={{ width: '100%', color: '#ffffff', borderBottomColor: '#ffffff' }}
+                        inputStyle={{fontFamily:'Roboto-Thin', width: '100%', color: '#ffffff', borderBottomColor: '#ffffff' }}
                         onChangeText={childName => this.setState({ childName })}
                         placeholderTextColor='white'
                         containerStyle={{ borderBottomColor: '#ffffff' }}
                         underlineColorAndroid="#ffffff"
+                        autoCorrect={false}
+                        autoCapitalize = 'none'
                     />
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Ziua nasteri</FormLabel>
+                    <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400', paddingTop:'4%' }}>Ziua nasteri</FormLabel>
                     {/* <FormInput
-              inputStyle={{ width: 300, color: 'white' }}
-              onChangeText={childAge => this.setState({childAge})}
-              placeholderTextColor='white'
-              /> */}
+                     inputStyle={{ width: 300, color: 'white' }}
+                     onChangeText={childAge => this.setState({childAge})}
+                     placeholderTextColor='white'
+                    /> */}
                     <DatePicker
                         style={{ width: '95%', color: '#ffffff' }}
                         showIcon={false}
@@ -150,6 +152,7 @@ export default class AddChild extends React.Component {
                                 height: 30,
                                 width: 500,
                                 marginLeft: '6%',
+                                fontFamily:'Roboto-Thin',
                                 alignItems: 'flex-start',
                                 borderWidth: 0,
                                 borderBottomWidth: 1,
@@ -157,25 +160,29 @@ export default class AddChild extends React.Component {
                                 color: '#ffffff'
                             },
                             placeholderText: {
+                                fontFamily:'Roboto-Thin',
                                 fontSize: 14,
                                 color: '#ffffff'
                             },
                             btnTextConfirm: {
                                 color: '#333333',
                                 fontSize: 18,
+                                fontFamily:'Roboto',
                             },
                             btnTextCancel: {
                                 color: '#333333',
                                 fontSize: 18,
+                                fontFamily:'Roboto',
                             },
                             dateText: {
                                 color: '#ffffff',
-                                justifyContent: 'flex-start'
+                                justifyContent: 'flex-start',
+                                fontFamily:'Roboto-Thin',
                             }
                         }}
                         onDateChange={(childAge, date) => { this.setState({ childAge: childAge, date: date }) }}
                     />
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Sexul copilului</FormLabel>
+                    <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22,paddingTop:'4%', color: 'white', fontWeight: '400' }}>Sexul copilului</FormLabel>
                     <RadioForm
                         style={styles.radioButtons}
                         initial={'Baiat'}
@@ -189,15 +196,15 @@ export default class AddChild extends React.Component {
                         selectedButtonColor={'#ffffff'}
                         animation={true}
                         onPress={(value) => { this.setState({ childSex: value }) }}
-                        labelStyle={{ color: '#ffffff', marginRight: 20 }}
+                        labelStyle={{fontFamily:'Roboto-Thin', color: '#ffffff', marginRight: 20 }}
                         buttonWrapStyle={{ color: '#ffffff' }}
                     />
                 </View>
-                <Text style={{ marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#521987' }}>{this.state.error}</Text>
+                <Text style={{fontFamily:'Roboto', marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#3F3470' }}>{this.state.error}</Text>
                 <Button onPress={this.registerChild.bind(this)}
                     title='Inregistrare'
                     buttonStyle={{
-                      backgroundColor: "#521987",
+                      backgroundColor: "#3F3470",
                       width: '100%',
                       height: 55,
                       borderColor: "transparent",
@@ -207,7 +214,7 @@ export default class AddChild extends React.Component {
                       marginBottom:15,
                       titleSize:24
                      }}
-                     textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+                     textStyle={{fontFamily:'Roboto', color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
                 />
             </View>
         );
@@ -223,12 +230,13 @@ const styles = StyleSheet.create({
     },
     containerText: {
         marginTop: 23,
-        backgroundColor: '#521987',
+        backgroundColor: '#3F3470',
         height: 65,
         width: '100%',
         flexDirection: 'row',
     },
     title: {
+        fontFamily:'Roboto',
         marginTop:'4%',
         fontSize: 30,
         color: '#ffffff',
@@ -241,7 +249,7 @@ const styles = StyleSheet.create({
         marginBottom: '8%'
     },
     form: {
-        marginTop: '15%',
+        marginTop: '5%',
         marginBottom:'35%'
     },
     text: {

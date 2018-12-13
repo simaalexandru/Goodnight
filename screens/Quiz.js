@@ -70,7 +70,7 @@ export default class Story extends React.Component {
                             marginRight: '8%',
                             width: 45,
                             height: 45,
-                            backgroundColor: '#521987',
+                            backgroundColor: '#3F3470',
                             borderRadius: 100,
                         }}
                     >
@@ -79,19 +79,19 @@ export default class Story extends React.Component {
                     <Text style={styles.title}>Intrebari poveste</Text>
                 </View>
                 <View style={{marginTop:'5%',marginLeft:'5%', marginRight:'5%'}}>
-                   <View style={{marginBottom:'3%'}}>
+                   <View style={{marginBottom:'4%'}}>
                     <Text style={styles.question}>{story.questions[0].questions}</Text>
                     <Text style={styles.answer}>{this.state.answer1}</Text>
                    </View>
-                   <View style={{marginBottom:'3%'}}>
+                   <View style={{marginBottom:'4%'}}>
                     <Text style={styles.question}>{story.questions[1].questions}</Text>
                     <Text style={styles.answer}>{this.state.answer2}</Text>
                    </View>
-                   <View style={{marginBottom:'3%'}}>
+                   <View style={{marginBottom:'4%'}}>
                     <Text style={styles.question}>{story.questions[2].questions}</Text>
                     <Text style={styles.answer}>{this.state.answer3}</Text>
                    </View>
-                   <View style={{marginBottom:'3%'}}>
+                   <View>
                     <Text style={styles.question}>{story.questions[3].questions}</Text>
                     <Text style={styles.answer}>{this.state.answer4}</Text>
                    </View>
@@ -99,7 +99,7 @@ export default class Story extends React.Component {
                 <Button onPress={this.answerQuiz.bind(this)}
                     title='Afiseaza raspunsurile'
                     buttonStyle={styles.button}
-                    textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+                    textStyle={{fontFamily:'Roboto', color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
                 />
             </View>
         );
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     },
     containerText: {
         marginTop: 23,
-        backgroundColor: '#521987',
+        backgroundColor: '#3F3470',
         height: 65,
         width: '100%',
         flexDirection: 'row',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         marginRight: '5%'
     },
     button: {
-        backgroundColor: "#521987",
+        backgroundColor: "#3F3470",
         width: 300,
         height: 55,
         borderColor: "transparent",
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
         alignSelf:'center'
     },
     title: {
+        fontFamily:'Roboto',
         marginTop: '4%',
         fontSize: 30,
         color: '#ffffff',
@@ -142,12 +143,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     question:{
+        fontFamily:'Roboto-Medium',
         fontSize: 22,
         color: '#f0f0f0'
     },
     answer:{
+        fontFamily:'Roboto',
         fontSize: 18,
-        color: '#111',
+        color: '#3F3470',
         marginTop:'1%'
     }
 });

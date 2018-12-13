@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, StatusBar, ScrollView, FlatList} from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, ScrollView, FlatList, KeyboardAvoidingView} from 'react-native';
 import * as firebase from 'firebase';
 import MainTabNavigator from '../navigation/MainTabNavigator';
 import { StackNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FormLabel, Input, Button, FormInput, FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import  {KeyboardAwareScrollView}  from 'react-native-keyboard-aware-scroll-view'
 
 firebase.initializeApp({
     apiKey: "AIzaSyDO0bDMYykXmXlk7mMtNW4mKN3RZnu_M_s",
@@ -21,7 +20,9 @@ firebase.initializeApp({
 export default class RegisterScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', firstName: '', lastName: '', error: '', message: '', child: '', loading: false };
+        this.state = { email: '', password: '', firstName: '',
+        lastName: '', error: '', message: '', child: '', loading: false,
+        checkPassword: '' };
     }
 
 
@@ -52,7 +53,7 @@ export default class RegisterScreen extends React.Component {
     //function createUserWithEmailAndPassword gets executed
     ValidateForm() {
         this.setState({ error: '', loading: true });
-        const { firstName, lastName, email, password, } = this.state;
+        const { firstName, lastName, email, password, checkPassword } = this.state;
         let i = 1
         if (firstName.length < 3) {
             this.setState({ error: 'Prenumele trebuie sa contina cel putin 3 caractere.', loading: false })
@@ -75,10 +76,13 @@ export default class RegisterScreen extends React.Component {
                 this.setState({ error: 'Numele trebuie sa contina doar litere', loading: false })
                 i = -1
             }
-
         }
         if (password.length < 6) {
             this.setState({ error: 'Parola trebuie sa contina cel putin 6 caractere.', loading: false })
+            i = -1
+        }
+        if (checkPassword !== password) {
+            this.setState({ error: 'Parola introdusa nu corespunde cu cea anterioara.', loading: false })
             i = -1
         }
         if (email.length < 1) {
@@ -99,7 +103,7 @@ export default class RegisterScreen extends React.Component {
     onSignUpPress() {
         this.setState({ error: '', loading: true });
         if (this.ValidateForm() === 1) {
-            const { email, password, firstName, lastName, child } = this.state;
+            const { email, password, firstName, lastName, child , checkPassword} = this.state;
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((res) => {
                     this.setState({ error: '', loading: false });
@@ -112,7 +116,7 @@ export default class RegisterScreen extends React.Component {
                     })
                 })
                 .catch(() => {
-                    this.setState({ error: 'Inregistrare esuata.', loading: false });
+                    this.setState({ error: 'Inregistrare esuata datorita conexiunii internetului.', loading: false });
                 })
 
         this.setState({error:'Utilizatorul a fost inregistrat cu succes.', loading:false})
@@ -133,27 +137,27 @@ export default class RegisterScreen extends React.Component {
             <Button onPress={this.onSignUpPress.bind(this)}
                 title='Inregistrare'
                 buttonStyle={{
-                    backgroundColor: "#521987",
+                    backgroundColor: "#3F3470",
                       width: 300,
                       height: 55,
                       borderColor: "transparent",
                       borderWidth: 0,
                       borderRadius: 25,
-                      marginTop:25,
                       marginBottom:15,
                       titleSize:24
                      }}
-                     textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+                     textStyle={{fontFamily:'Roboto', color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
             />
 
             <View style={styles.bottomText}>
-              <Text style={{color:'white', fontSize: 16 }}>Ai deja un cont?</Text>
+              <Text style={{fontFamily:'Roboto', color:'white', fontSize: 16 }}>Ai deja un cont?</Text>
               <Text onPress={() =>  navigate('Login')}
-                    style={{ color:'#521987', paddingLeft:5,fontSize: 16 }}>
+                    style={{fontFamily:'Roboto', color:'#3F3470', paddingLeft:5,fontSize: 16 }}>
                     Autentificare</Text>
             </View>
         </View>
     }
+
 
     render() {
         return (
@@ -162,38 +166,58 @@ export default class RegisterScreen extends React.Component {
 
              <View style={styles.logo}>
                     <Image
-                        style={{ width: 190, height: 70,}}
-                        source={require('../assets/images/Nick_(Logo).png')}
+                        style={{ width: 220, height: 140,}}
+                        source={require('../assets/images/finallogoversion.png')}
                     />
             </View>
 
-             <KeyboardAwareScrollView extraScrollHeight={100} enableOnAndroid={true} style={styles.form}>
-                <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
+             <KeyboardAvoidingView  
+             style={{ flex: 1 }}
+             behavior = 'padding'  enabled>
+              <ScrollView style={styles.form}>
+                <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
                 <FormInput
-                    inputStyle={{ width: 300, color: 'white',  }}
+                    inputStyle={{fontFamily:'Roboto-Thin', width: 300, color: 'white',  }}
                     onChangeText={lastName => this.setState({ lastName })}
                     placeholderTextColor='white'
+                    autoCorrect={false}
+                    autoCapitalize = 'none'
                 />
-                <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Prenume</FormLabel>
+                <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400' }}>Prenume</FormLabel>
                 <FormInput
-                    inputStyle={{ width: 300, color: 'white' }}
+                    inputStyle={{fontFamily:'Roboto-Thin', width: 300, color: 'white' }}
                     onChangeText={firstName => this.setState({ firstName })}
                     placeholderTextColor='white'
+                    autoCorrect={false}
+                    autoCapitalize = 'none'
                 />
-                <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
+                <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
                 <FormInput
-                    inputStyle={{ width: 300, color: 'white' }}
+                    inputStyle={{fontFamily:'Roboto-Thin', width: 300, color: 'white' }}
                     onChangeText={email => this.setState({ email })}
                     placeholderTextColor='white'
+                    autoCorrect={false}
+                    autoCapitalize = 'none'
                 />
-                <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400'}}>Parola </FormLabel>
+                <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400'}}>Parola </FormLabel>
                 <FormInput
-                    inputStyle={{ width: 300, color: 'white'}}
+                    inputStyle={{fontFamily:'Roboto-Thin', width: 300, color: 'white'}}
                     secureTextEntry
                     placeholderTextColor='white'
+                    autoCorrect={false}
+                    autoCapitalize = 'none'
                     onChangeText={password => this.setState({ password })} />
-                </KeyboardAwareScrollView>
-                <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#b20000'  }}>{this.state.error}</Text>
+                <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400'}}>Reintrodu parola</FormLabel>
+                <FormInput
+                    inputStyle={{fontFamily:'Roboto-Thin', width: 300, color: 'white'}}
+                    secureTextEntry
+                    placeholderTextColor='white'
+                    autoCorrect={false}
+                    autoCapitalize = 'none'
+                    onChangeText={checkPassword => this.setState({ checkPassword })} />
+                </ScrollView>
+                </KeyboardAvoidingView>
+                <Text style={{fontFamily:'Roboto', marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#b20000'  }}>{this.state.error}</Text>
                 {this.renderButtonOrLoading()}
          </View>
         )
@@ -212,9 +236,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'center',
+
     },
     logo: {
-        marginTop:'30%',
+        marginTop:'10%',
         alignItems: 'center',
         flexDirection:'row',
         justifyContent: 'center',

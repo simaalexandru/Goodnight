@@ -113,6 +113,8 @@ export default class AddChild extends React.Component {
             placeholderTextColor='white'
             containerStyle={{borderBottomColor: '#ffffff'}}
             underlineColorAndroid="#ffffff"
+            autoCorrect={false}
+            autoCapitalize = 'none'
           />
           <FormLabel labelStyle={{ fontSize: 16, color: 'white' }}>Ziua nasteri</FormLabel>
           {/* <FormInput

@@ -20,18 +20,16 @@ import DatePicker from 'react-native-datepicker';
 import PropTypes from 'prop-types';
 import { StackNavigation } from 'react-navigation';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-import { LinearGradient } from 'expo';
+import { LinearGradient, Font } from 'expo';
 import { Icon } from 'react-native-elements';
+import ls from 'react-native-local-storage';
 
-// var radio_props = [
-//   {label: 'Baiat', value: 'Baiat' },
-//   {label: 'Fata', value: 'Fata' }
-// ];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+
 
   static propTypes = {
     currentUserKids: PropTypes.array.isRequired,
@@ -44,7 +42,7 @@ export default class HomeScreen extends React.Component {
       childSex: '', storyList: [], childPhoto: '',
       error: '', currentUserKids: [],
       displayMessage: '',
-      date: '04-24-2015'
+      date: '04-24-2015',
     };
   }
 
@@ -72,17 +70,43 @@ export default class HomeScreen extends React.Component {
           list: this.getStoryList(child.key)
         })
       })
+      if (copii.length === 0) {
+        Alert.alert(
+          'Niciun copil adaugat in lista',
+          'Pentru a accesa povestile, trebuie sa adaugati un copil, folosind butonul de mai jos.',
+          [
+            { text: 'OK' },
+          ],
+          { cancelable: true }
+        )
+      }
       this.setState({ currentUserKids: copii });
-      // console.log(this.state.currentUserKids);
     })
   }
 
-  //opening the ChildInfo screen and transfering child's data
-  // _onPressItem = () => {
-  //   this.props.navigation.navigate('ChildInfo', {
-  //     currentChld: currentChild
-  //   })
-  // };
+
+  logout() {
+      Alert.alert(
+        'Log Out',
+        'Esti sigur ca vrei sa te deloghezi?',
+        [
+          { text: 'Da', onPress: () => this.logOutUser()},
+          { text: 'Renunta'}
+        ],
+        { cancelable: true }
+      )
+  }
+
+  logOutUser(){
+    ls.save('email', '')
+    ls.save('password', '')
+
+    this.props.navigation.navigate('Login', {
+      email: '',
+      password: ''
+    })
+  }
+
 
   //accessing the storyList array from db 
   //getting the stories values and adding them to my state array (storyList)
@@ -102,96 +126,97 @@ export default class HomeScreen extends React.Component {
       this.setState({ storyList: povesti });
     })
     return this.state.storyList;
-
   }
+
+
 
   //displaying kids in flatlist
   returnKids() {
-    // if(!this.state.currentUserKids.length){
-    //   return <Text style={{marginTop:'10%'}}>Nu exista nici un copil inregistrat pentru acest cont.</Text>
-    // } 
-    // else{
-    return <FlatList
-      style={styles.listContainer}
-      data={this.state.currentUserKids}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => {
-        //console.log(item);
-        if (item.sex === 'Fata') {
+    if (this.state.currentUserKids.length > 0) {
+      return <FlatList
+        style={styles.listContainer}
+        data={this.state.currentUserKids}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => {
 
-          this._renderItemGirl = ({ item })
-          return (
-            <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
-              <LinearGradient
-                colors={['#ff9a9e', '#fecfef']}
-                style={styles.childStyling}
-                start={[0, 0.5]}
-                end={[1, 0.5]}
-              >
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
-                  {<Image
-                    style={styles.avatar}
-                    source={require('../assets/images/girl.png')} />}
-                  <Text style={styles.nameChild}>{item.name}</Text>
-                </View>
-                <View style={{ marginTop: '2%', marginRight: '2%' }}>
-                  <TouchableOpacity
-                    onPress={() => { this._onPressButton(item) }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 30,
-                      height: 30,
-                      backgroundColor: '#521987',
-                      borderRadius: 100,
-                    }}
-                  >
-                    <Icon name={"edit"} size={15} color="#fff" />
-                  </TouchableOpacity>
-                </View>
-              </LinearGradient>
-            </TouchableWithoutFeedback>
-          )
+          if (item.sex === 'Fata') {
+            this._renderItemGirl = ({ item })
+            return (
+              <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
+                <LinearGradient
+                  colors={['#EF7D95', '#FDA0A4']}
+                  style={styles.childStyling}
+                  start={[0, 0.5]}
+                  end={[1, 0.5]}
+                >
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
+                    {<Image
+                      style={styles.avatar}
+                      source={require('../assets/images/girl.png')} />}
+                    <Text style={styles.nameChild}>Cartile lui {item.name}</Text>
+                  </View>
+                  <View style={{ marginTop: '2%', marginRight: '2%' }}>
+                    <TouchableOpacity
+                      onPress={() => { this._onPressButton(item) }}
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 30,
+                        height: 30,
+                        backgroundColor: '#3F3470',
+                        borderRadius: 100,
+                      }}
+                    >
+                      <Icon name={"edit"} size={15} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>
+              </TouchableWithoutFeedback>
+            )
+          }
+          if (item.sex === 'Baiat') {
+            return (
+              <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
+                <LinearGradient
+                  colors={['#3B6AB7', '#759BE3']}
+                  ///DBF2FD
+                  style={styles.childStyling}
+                  start={[0, 0.5]}
+                  end={[1, 0.5]}
+                >
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
+                    {<Image
+                      style={styles.avatar}
+                      source={require('../assets/images/boy.png')} />}
+                    <Text style={styles.nameChild}>Cartile lui {item.name}</Text>
+                  </View>
+                  <View style={{ marginTop: '2%', marginRight: '2%' }}>
+                    <TouchableOpacity
+                      onPress={() => { this._onPressButton(item) }}
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 30,
+                        height: 30,
+                        backgroundColor: '#3F3470',
+                        borderRadius: 100,
+                      }}
+                    >
+                      <Icon name={"edit"} size={15} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>
+              </TouchableWithoutFeedback>
+
+            )
+          }
         }
-        else {
-          return (
-            <TouchableWithoutFeedback onPress={() => { this._onPressItem(item) }}>
-              <LinearGradient
-                colors={['#30cfd0', '#c3dff5']}
-                style={styles.childStyling}
-                start={[0, 0.5]}
-                end={[1, 0.5]}
-              >
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: '8%' }}>
-                  {<Image
-                    style={styles.avatar}
-                    source={require('../assets/images/boy.png')} />}
-                  <Text style={styles.nameChild}>{item.name}</Text>
-                </View>
-                <View style={{ marginTop: '2%', marginRight: '2%' }}>
-                  <TouchableOpacity
-                    onPress={() => { this._onPressButton(item) }}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 30,
-                      height: 30,
-                      backgroundColor: '#521987',
-                      borderRadius: 100,
-                    }}
-                  >
-                    <Icon name={"edit"} size={15} color="#fff" />
-                  </TouchableOpacity>
-                </View>
-              </LinearGradient>
-            </TouchableWithoutFeedback>
-                
-          )
         }
-      }
-      }
-    />
+      />
+
+    }
   }
+
 
 
   //opens the StoryList screen of the selected child
@@ -214,8 +239,14 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.containerText}>
-          <Text style={styles.title}>Lista copiilor</Text>
-        </View>
+        <Text style={styles.title}>Lista copiilor</Text>
+                    <TouchableOpacity
+                        onPress={this.logout.bind(this)}
+                        style={{ marginTop: '5%', backgroundColor: '#3F3470', marginLeft:'15%'}}
+                      >
+                      <Icon name={"exit-to-app"} size={30} color="#fff" />
+                    </TouchableOpacity>
+         </View>
         <ScrollView style={{ height: 370 }}>
           {this.returnKids()}
         </ScrollView>
@@ -227,7 +258,7 @@ export default class HomeScreen extends React.Component {
               justifyContent: 'center',
               width: 50,
               height: 50,
-              backgroundColor: '#521987',
+              backgroundColor: '#3F3470',
               borderRadius: 100,
             }}
           >
@@ -248,10 +279,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#7f7fd5',
   },
   containerText: {
-    backgroundColor: '#521987',
+    marginTop: 23,
+    backgroundColor: '#3F3470',
     height: 65,
     width: '100%',
-    marginTop: 23
+    flexDirection: 'row',
   },
   containerButton: {
     flex: 1,
@@ -267,12 +299,28 @@ const styles = StyleSheet.create({
     height: 50,
   },
   nameChild: {
-    fontSize: 28,
+    fontSize: 20,
+    backgroundColor: 'transparent',
+    marginTop: '6%',
+    marginLeft: '5%',
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
+  noChild: {
+    fontSize: 22,
     backgroundColor: 'transparent',
     marginTop: '4%',
     marginLeft: '10%',
+    marginLeft: '10%',
     color: '#ffffff',
     fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
+  noChildAvatar: {
+    width: 240,
+    height: 260,
+    alignSelf: 'center',
   },
   childStyling: {
     height: 100,
@@ -287,11 +335,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   title: {
-    marginTop: '4%',
-    textAlign: 'center',
+    marginTop:'4%',
+    marginLeft: '25%',
     fontSize: 30,
     color: '#ffffff',
     fontWeight: '500',
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Medium',
   },
 });

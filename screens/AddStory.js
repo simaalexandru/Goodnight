@@ -75,7 +75,7 @@ export default class AddStory extends React.Component {
         <Button onPress={this.registerChild.bind(this)}
           title='Inregistrare'
           buttonStyle={{
-            backgroundColor: "rgba(177, 32, 204, 9)",
+            backgroundColor: "#3F3470",
             width: 350,
             height: 45,
             borderColor: "transparent",

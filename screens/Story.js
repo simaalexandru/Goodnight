@@ -50,15 +50,6 @@ export default class Story extends React.Component {
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    
-        // if(this.state.exists===1){
-            
-            
-        // }
-        // else
-        // {
-            
-        // }
     }
 
     handleBackButtonClick() {
@@ -67,7 +58,6 @@ export default class Story extends React.Component {
                 
             if(element.name===this.props.navigation.state.params.currentPage.name){
                 sw=0;
-                console.log('egaaal', element.name, this.props.navigation.state.params.currentPage.name)
                 var currentUserId = firebase.auth().currentUser.uid;
                 firebase.database().ref('user/' + currentUserId +
                 '/child/' + this.props.navigation.state.params.currentChild.id + '/storyList/'
@@ -79,7 +69,6 @@ export default class Story extends React.Component {
         });
 
         if(sw===1){
-            console.log('NU egaaal',  this.props.navigation.state.params.currentPage.name)
             var currentUserId = firebase.auth().currentUser.uid;
         firebase.database().ref('user/' + currentUserId +
         '/child/' + this.props.navigation.state.params.currentChild.id + '/storyList/').push({
@@ -229,7 +218,6 @@ export default class Story extends React.Component {
 
    nextPage(){
     this.setState({ index: this.state.index+1 });
-       //console.log(this.state.index);
        this.displayStoryText();
    }
 
@@ -261,7 +249,7 @@ export default class Story extends React.Component {
                             marginRight: '15%',
                             width: 45,
                             height: 45,
-                            backgroundColor: '#521987',
+                            backgroundColor: '#3F3470',
                             borderRadius: 100,
                         }}
                     >
@@ -292,12 +280,13 @@ const styles = StyleSheet.create({
     },
     containerText: {
         marginTop: 23,
-        backgroundColor: '#521987',
+        backgroundColor: '#3F3470',
         height: 65,
         width: '100%',
         flexDirection: 'row',
     },
     title: {
+        fontFamily:'Roboto',
         marginTop:'4%',
         fontSize: 30,
         color: '#ffffff',
@@ -305,6 +294,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     storyText:{
+        fontFamily:'Roboto',
         fontSize:18,
         color:'#FFFFFF'
     },
@@ -321,7 +311,8 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start'
     },
     buttonNext:{
-        backgroundColor: "#521987",
+        fontFamily:'Roboto',
+        backgroundColor: "#3F3470",
         width: 50,
         height: 50,
         fontSize:12,
@@ -332,7 +323,8 @@ const styles = StyleSheet.create({
         marginBottom:20,
     },
     buttonPrevious:{
-        backgroundColor: "#521987",
+        fontFamily:'Roboto',
+        backgroundColor: "#3F3470",
         width: 50,
         height: 50,
         fontSize:12,
@@ -343,7 +335,8 @@ const styles = StyleSheet.create({
         marginBottom:20,
     },
     buttonQuiz:{
-        backgroundColor: "#521987",
+        fontFamily:'Roboto',
+        backgroundColor: "#3F3470",
         width: 80,
         height: 50,
         fontSize:12,
@@ -354,12 +347,14 @@ const styles = StyleSheet.create({
         marginBottom:20,
     },
     pageNumber: {
+        fontFamily:'Roboto',
         color: "#f0f0f0",
         fontSize:16,
         fontWeight:'bold',
         marginTop:'4%',
     },
     pageNumberLast: {
+        fontFamily:'Roboto',
         marginLeft:'25%',
         marginRight:'17%',
         color: "#f0f0f0",
@@ -368,6 +363,7 @@ const styles = StyleSheet.create({
         marginTop:'4%',
     },
     pageNumberFirst: {
+        fontFamily:'Roboto',
         marginRight:'25%',
         color: "#f0f0f0",
         fontSize:16,

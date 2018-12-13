@@ -103,6 +103,18 @@ export default class EditChild extends React.Component {
         }
     }
 
+    remove() {
+        Alert.alert(
+          'Eliminare copil',
+          'Esti sigur ca vrei sa elimini copilul din lista?',
+          [
+            { text: 'Da', onPress: () => this.removeChild()},
+            { text: 'Renunta'}
+          ],
+          { cancelable: true }
+        )
+    }
+
     removeChild() {
             var user = firebase.auth().currentUser;
             const { childName, childAge, childSex, storyList } = this.state;
@@ -131,7 +143,7 @@ export default class EditChild extends React.Component {
                             marginRight: '15%',
                             width: 45,
                             height: 45,
-                            backgroundColor: '#521987',
+                            backgroundColor: '#3F3470',
                             borderRadius: 100,
                         }}
                     >
@@ -140,21 +152,16 @@ export default class EditChild extends React.Component {
                     <Text style={styles.title}>Editeaza copil</Text>
                 </View>
                 <View style={styles.form}>
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
+                    <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400' }}>Nume</FormLabel>
                     <FormInput
-                        inputStyle={{ width: '100%', color: '#ffffff', borderBottomColor: '#ffffff' }}
+                        inputStyle={{fontFamily:'Roboto-Thin', width: '100%', color: '#ffffff', borderBottomColor: '#ffffff' }}
                         onChangeText={childName => this.setState({ childName })}
                         placeholder={this.props.navigation.state.params.currentChild.name}
                         placeholderTextColor='white'
                         containerStyle={{ borderBottomColor: '#ffffff' }}
                         underlineColorAndroid="#ffffff"
                     />
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Ziua nasteri</FormLabel>
-                    {/* <FormInput
-              inputStyle={{ width: 300, color: 'white' }}
-              onChangeText={childAge => this.setState({childAge})}
-              placeholderTextColor='white'
-              /> */}
+                    <FormLabel labelStyle={{fontFamily:'Roboto', fontSize: 22, color: 'white', fontWeight: '400', paddingTop:'4%' }}>Ziua nasteri</FormLabel>
                     <DatePicker
                         style={{ width: '95%', color: '#ffffff' }}
                         showIcon={false}
@@ -174,28 +181,33 @@ export default class EditChild extends React.Component {
                                 borderWidth: 0,
                                 borderBottomWidth: 1,
                                 borderBottomColor: '#ffffff',
-                                color: '#ffffff'
+                                color: '#ffffff',
+                                fontFamily:'Roboto-Thin',
                             },
                             placeholderText: {
+                                fontFamily:'Roboto-Thin',
                                 fontSize: 14,
                                 color: '#ffffff'
                             },
                             btnTextConfirm: {
+                                fontFamily:'Roboto',
                                 color: '#333333',
                                 fontSize: 18,
                             },
                             btnTextCancel: {
+                                fontFamily:'Roboto',
                                 color: '#333333',
                                 fontSize: 18,
                             },
                             dateText: {
+                                fontFamily:'Roboto-Thin',
                                 color: '#ffffff',
                                 justifyContent: 'flex-start'
                             }
                         }}
                         onDateChange={(childAge, date) => { this.setState({ childAge: childAge, date: date }) }}
                     />
-                    <FormLabel labelStyle={{ fontSize: 22, color: 'white', fontWeight: '400' }}>Sexul copilului</FormLabel>
+                    <FormLabel labelStyle={{fontFamily:'Roboto',paddingTop:'4%', fontSize: 22, color: 'white', fontWeight: '400' }}>Sexul copilului</FormLabel>
                     <RadioForm
                         style={styles.radioButtons}
                         initial={this.props.navigation.state.params.currentChild.sex === 'Baiat' ? 0 : 1}
@@ -209,11 +221,11 @@ export default class EditChild extends React.Component {
                         selectedButtonColor={'#ffffff'}
                         animation={true}
                         onPress={(value) => { this.setState({ childSex: value }) }}
-                        labelStyle={{ color: '#ffffff', marginRight: 20 }}
+                        labelStyle={{fontFamily:'Roboto-Thin', color: '#ffffff', marginRight: 20 }}
                         buttonWrapStyle={{ color: '#ffffff' }}
                     />
                 </View>
-                <Text style={{ marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#521987' }}>{this.state.error}</Text>
+                <Text style={{fontFamily:'Roboto', marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#3F3470' }}>{this.state.error}</Text>
                 <View style={{flexDirection:'row', justifyContent:'space-between',marginLeft:'5%', marginRight:'5%'}}>
                 <TouchableOpacity
                     onPress={this.editChild.bind(this)}
@@ -222,20 +234,20 @@ export default class EditChild extends React.Component {
                         justifyContent: 'center',
                         width: 70,
                         height: 70,
-                        backgroundColor: '#521987',
+                        backgroundColor: '#3F3470',
                         borderRadius: 100,
                     }}
                 >
                     <Icon name={"save"} size={40} color="#fff" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={this.removeChild.bind(this)}
+                    onPress={this.remove.bind(this)}
                     style={{
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: 70,
                         height: 70,
-                        backgroundColor: '#521987',
+                        backgroundColor: '#3F3470',
                         borderRadius: 100,
                     }}
                 >
@@ -256,7 +268,7 @@ const styles = StyleSheet.create({
     },
     containerText: {
         marginTop: 23,
-        backgroundColor: '#521987',
+        backgroundColor: '#3F3470',
         height: 65,
         width: '100%',
         flexDirection: 'row',
@@ -267,6 +279,7 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '500',
         fontWeight: 'bold',
+        fontFamily:'Roboto',
     },
     radioButtons: {
         marginLeft: '5%',
@@ -274,7 +287,7 @@ const styles = StyleSheet.create({
         marginBottom: '8%'
     },
     form: {
-        marginTop: '15%',
+        marginTop: '5%',
         marginBottom: '35%'
     },
     text: {

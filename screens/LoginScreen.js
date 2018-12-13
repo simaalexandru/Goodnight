@@ -1,36 +1,69 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, StatusBar,} from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, } from 'react-native';
 import * as firebase from 'firebase';
 import MainTabNavigator from '../navigation/MainTabNavigator';
 import { StackNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Font } from 'expo';
 import { FormLabel, Input, Button, FormInput, FormValidationMessage } from 'react-native-elements';
+import ls from 'react-native-local-storage';
 
 export default class LoginScreen extends React.Component {
+
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', error: '',message:'', loading: false };
+        this.state = { email: '', password: '', error: '', message: '', loading: false, fontLoaded: false };
     }
-    
+ 
+    componentWillMount(){
+        ls.get('email').then((email) => {
+            if (email!=null){
+               ls.get('password').then((password) => {
+                this.setState({ email: email, password: password });
+               });
+             }
+           });
+    }
+
+    componentWillReceiveProps(){
+        ls.get('email', 'password').then((email, password) => {
+           
+                this.setState({ email: email, password: password });
+             
+           });
+    }
+
     static navigationOptions = {
         tabBarVisible: false,
         header: null,
-      };
+    };
 
-    
+
     onLoginPress() {
         this.setState({ error: '', loading: true });
         const { email, password } = this.state;
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
+                ls.save('email', email)
+                    .then(() => {
+                        ls.get('email');
+                        // output should be "get: Kobe Bryant"
+                    })
+
+
+                ls.save('password', password)
+                    .then(() => {
+                        ls.get('password');
+                        // output should be "get: Kobe Bryant"
+                    })
+            
                 this.setState({ error: '', loading: false });
                 this.props.navigation.navigate('Home');
-
+                
             })
             .catch(() => {
                 this.setState({ error: 'Autentificare esuata.', loading: false });
             })
-
     }
 
 
@@ -38,66 +71,73 @@ export default class LoginScreen extends React.Component {
         const { navigate } = this.props.navigation;
 
         if (this.state.loading) {
-            return <Text style={{ marginTop:'2%',fontSize: 16, color:'#530c39' }}
+            return <Text style={{ marginTop: '2%', fontSize: 16, color: '#3F3470' }}
             >Loading</Text>
         }
         return <View style={styles.buttons}>
-                <Button onPress={this.onLoginPress.bind(this)}
-                    title='Autentificare'
-                    buttonStyle={{
-                      backgroundColor: "#521987",
-                      width: 300,
-                      height: 55,
-                      borderColor: "transparent",
-                      borderWidth: 0,
-                      borderRadius: 25,
-                      marginTop:25,
-                      marginBottom:15,
-                      titleSize:24
-                     }}
-                     textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
-                    />
+            <Button onPress={this.onLoginPress.bind(this)}
+                title='Autentificare'
+                buttonStyle={{
+                    backgroundColor: "#3F3470",
+                    width: 300,
+                    height: 55,
+                    borderColor: "transparent",
+                    borderWidth: 0,
+                    borderRadius: 25,
+                    marginTop: 25,
+                    marginBottom: 15,
+                    titleSize: 24,
+                }}
+                textStyle={{ fontFamily: 'Roboto', color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+            />
 
-                <View style={styles.bottomText}>
-                 <Text style={{color:'white', fontSize: 16 }}>Nu esti inregistrat?</Text>
-                 <Text onPress={() =>  navigate('Register')}
-                     style={{ color:'#521987', paddingLeft:5,fontSize: 16 }}>
-                     Inregistreaza-te</Text>
-                </View>
-              </View>
+            <View style={styles.bottomText}>
+                <Text style={{ fontFamily: 'Roboto', color: 'white', fontSize: 16 }}>Nu esti inregistrat?</Text>
+                <Text onPress={() => navigate('Register')}
+                    style={{ fontFamily: 'Roboto', color: '##3F3470', paddingLeft: 5, fontSize: 16 }}>
+                    Inregistreaza-te</Text>
+            </View>
+        </View>
     }
 
     render() {
         return (
-        <View style={styles.container}>
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
-      
-         <View>
-                <Image
-                    style={{ width: 300, height: 200, marginTop:'15%'}}
-                    source={require('../assets/images/LogoRaft.png')}
-                />
-        </View>
+            <View style={styles.container}>
+                <StatusBar backgroundColor="blue" barStyle="light-content" />
 
-         <View style={styles.form}>     
-            <FormLabel labelStyle={{ fontSize:24, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
-            <FormInput
-                inputStyle={{ width: 300, color: 'white',}}
-                onChangeText={email => this.setState({ email })}
-                placeholderTextColor='white'
-            />
+                <View>
+                    <Image
+                        style={{ width: 260, height: 170, marginTop: '15%' }}
+                        source={require('../assets/images/finallogoversion.png')}
+                    />
+                </View>
 
-            <FormLabel labelStyle={{fontSize:24, color: 'white', fontWeight: '400'}}>Parola </FormLabel>
-            <FormInput
-                inputStyle={{ width: 300, color: 'white', }}
-                secureTextEntry
-                placeholderTextColor='white'
-                onChangeText={password => this.setState({ password })} />
-            <Text style={{marginLeft:'5%', marginTop:'2%',fontSize: 16, color:'#521987' }}>{this.state.error}</Text>
+                <View style={styles.form}>
+                    <FormLabel labelStyle={{ fontFamily: 'Roboto', fontSize: 24, color: 'white', fontWeight: '400' }}>E-mail</FormLabel>
+                    <FormInput
+                        inputStyle={{ fontFamily: 'Roboto-Thin', width: 300, color: 'white', }}
+                        defaultValue={this.state.email}
+                        onChangeText={email => this.setState({ email })}
+                        placeholderTextColor='white'
+                        autoCorrect={false}
+                        autoCapitalize = 'none'
+                    />
+
+                    <FormLabel labelStyle={{ fontFamily: 'Roboto', fontSize: 24, color: 'white', fontWeight: '400' }}>Parola </FormLabel>
+                    <FormInput
+                        inputStyle={{ fontFamily: 'Roboto-Thin', width: 300, color: 'white', }}
+                        secureTextEntry
+                        defaultValue={this.state.password}
+                        placeholderTextColor='white'
+                        autoCorrect={false}
+                        autoCapitalize = 'none'
+                        onChangeText={password => this.setState({ password })} />
+                    <Text style={{ marginLeft: '5%', marginTop: '2%', fontSize: 16, color: '#3F3470' }}>{this.state.error}</Text>
+                </View>
+                {this.renderButtonOrLoading()}
             </View>
-            {this.renderButtonOrLoading()}
-     </View>
-    )
+        )
+
     }
 }
 
@@ -114,13 +154,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
     },
-  
-    bottomText: { 
+
+    bottomText: {
         alignItems: 'flex-start',
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'center',
     },
     buttons: {
-        marginBottom:'5%'
+        marginBottom: '5%'
     }
-  });
+});

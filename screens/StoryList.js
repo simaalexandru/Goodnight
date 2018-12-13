@@ -24,6 +24,8 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 import { Icon } from 'react-native-elements';
 import Accordion from 'react-native-collapsible/Accordion';
 import email from 'react-native-email';
+import ls from 'react-native-local-storage';
+
 
 
 
@@ -126,12 +128,12 @@ export default class StoryList extends React.Component {
 
     handleEmail = () => {
         const to = ['simax_west@yahoo.com'] // string or array of email addresses
-          email(to, {
-              subject: 'Adaugare poveste noua.',
-              body: 'Aici ai un template pentru povestea pe care vrei sa o adaugi. Trebuie sa aiba un titlu, o scurta descriere si varsta potrivita micilor cititori. Poti adauga cate pagini doresti, dar minimul este de 5 pagini. Vei primi un e-mail imediat ce povestea ajunge la noi. Va multumim.'
-          }).catch(console.error)
-        }
-    
+        email(to, {
+            subject: 'Adaugare poveste noua.',
+            body: 'Aici ai un template pentru povestea pe care vrei sa o adaugi. Trebuie sa aiba un titlu, o scurta descriere si varsta potrivita micilor cititori. Poti adauga cate pagini doresti, dar minimul este de 5 pagini. Vei primi un e-mail imediat ce povestea ajunge la noi. Va multumim.'
+        }).catch(console.error)
+    }
+
 
     listStories() {
         var usersRef = firebase.database().ref('story/');
@@ -218,6 +220,9 @@ export default class StoryList extends React.Component {
                         borderColor: '#a6c1ee',
                     }}>
                         <Text style={{
+                            fontFamily: 'Roboto',
+                            paddingTop: 2,
+                            paddingLeft: 5,
                             color: '#333',
                             width: width,
                             backgroundColor: '#a6c1ee',
@@ -228,13 +233,56 @@ export default class StoryList extends React.Component {
                     </View>
                 </View>
             );
-        }
+        }  else {
+            return(
+            <View style={{ marginLeft: '3%', marginRight: '3%' }}>
+            <View style={{
+                marginBottom: 10,
+                width: '100%',
+                borderWidth: 1,
+                borderColor: '#a6c1ee',
+            }}>
+                <Text style={{
+                    fontFamily: 'Roboto',
+                    paddingTop: 2,
+                    paddingLeft: 5,
+                    color: '#f0f0f0',
+                    width: width,
+                    height: 20,
+                    fontSize: 14
+                }}>Nu ai inceput cartea
+                </Text>
+            </View>
+        </View>
+            )}
+    }
+
+    logout() {
+        Alert.alert(
+            'Log Out',
+            'Esti sigur ca vrei sa te deloghezi?',
+            [
+                { text: 'Da', onPress: () => this.logOutUser() },
+                { text: 'Renunta' }
+            ],
+            { cancelable: true }
+        )
+    }
+
+    logOutUser() {
+        ls.save('email', '')
+        ls.save('password', '')
+
+        this.props.navigation.navigate('Login', {
+            email: '',
+            password: ''
+        })
     }
 
     _renderHeader = section => {
         return (
-            <View style={{flexDirection:'row', justifyContent:'center'}}>
-                <Text style={{fontSize:16, color:'#f0f0f0', marginTop:5, marginBottom:5, marginRight:5}}>{section.title}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#f0f0f0', marginTop: 5, marginBottom: 5, marginRight: 5 }}>{section.title}</Text>
                 <Icon name={'add-circle-outline'} size={20} color="#fff" />
             </View>
         );
@@ -244,14 +292,14 @@ export default class StoryList extends React.Component {
         return (
             <View>
                 <Text
-                style={{color:'#f0f0f0',alignSelf:'center', marginTop:5, marginBottom:5, marginLeft:'5%', marginRight:'5%'}}
+                    style={{ fontFamily: 'Roboto-Thin', color: '#f0f0f0', alignSelf: 'center', marginTop: 5, marginBottom: 5, marginLeft: '5%', marginRight: '5%' }}
                 >{section.content}</Text>
-                <Button 
-                 onPress={this.handleEmail}
-                 title='Trimite povestea'
-                 buttonStyle={styles.button}
-                 textStyle={{ color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
-                    />
+                <Button
+                    onPress={this.handleEmail}
+                    title='Trimite povestea'
+                    buttonStyle={styles.button}
+                    textStyle={{ fontFamily: 'Roboto', color: "#FFFFFF", fontSize: 24, fontWeight: '300' }}
+                />
             </View>
         );
     };
@@ -267,9 +315,9 @@ export default class StoryList extends React.Component {
                 {<Image
                     style={styles.avatar}
                     source={{ uri: item.coverPicture }} />}
-                <View style={{ backgroundColor: '#521987', borderWidth: 1, borderTopWidth: 0, borderTopStartRadius: 0, borderTopEndRadius: 0, borderRadius: 10, }}>
+                <View style={{ backgroundColor: '#3F3470', borderColor: 'transparent', borderWidth: 1, borderTopWidth: 0, borderTopStartRadius: 0, borderTopEndRadius: 0, borderRadius: 10, }}>
                     {/* <Text style={{ fontSize: 28, color: 'white',marginLeft:'3%', fontWeight: '400', marginTop: 10}}>{item.name}</Text> */}
-                    <Text style={{ fontSize: 22, color: 'white', marginLeft: '3%', fontWeight: '400', marginBottom: 10 }}>Progres:</Text>
+                    <Text style={{ fontSize: 22, fontFamily: 'Roboto', color: 'white', marginLeft: '3%', fontWeight: '400', marginBottom: 5, marginTop: 5, }}>Progres:</Text>
                     {this.progressBar(item)}
                 </View>
             </View>
@@ -295,15 +343,23 @@ export default class StoryList extends React.Component {
                         style={{
                             marginTop: '5%',
                             marginRight: '15%',
+                            marginLeft: '2%',
                             width: 45,
                             height: 45,
-                            backgroundColor: '#521987',
+                            backgroundColor: '#3F3470',
                             borderRadius: 100,
                         }}
                     >
                         <Icon name={"arrow-back"} size={30} color="#fff" />
                     </TouchableOpacity>
                     <Text style={styles.title}>Raft de carti</Text>
+                    <TouchableOpacity
+                        onPress={this.logout.bind(this)}
+                        style={{ marginTop: '5%', backgroundColor: '#3F3470', marginLeft: '14%' }}
+                    >
+                        <Icon name={"exit-to-app"} size={30} color="#fff" />
+                    </TouchableOpacity>
+
                 </View>
                 {this.returnStories()}
                 <Accordion
@@ -312,8 +368,8 @@ export default class StoryList extends React.Component {
                     renderHeader={this._renderHeader}
                     renderContent={this._renderContent}
                     onChange={this._updateSections}
-                /> 
-            </View>    
+                />
+            </View>
         );
     }
 }
@@ -331,17 +387,17 @@ const styles = StyleSheet.create({
     },
     containerText: {
         marginTop: 23,
-        backgroundColor: '#521987',
+        backgroundColor: '#3F3470',
         height: 65,
         width: '100%',
         flexDirection: 'row',
     },
     button: {
-        backgroundColor: "#521987",
+        backgroundColor: "#3F3470",
         width: 300,
         height: 55,
-        alignSelf:'center',
-        marginBottom:10,
+        alignSelf: 'center',
+        marginBottom: 10,
         borderColor: "transparent",
         borderWidth: 0,
         borderRadius: 25,
@@ -354,10 +410,15 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '500',
         fontWeight: 'bold',
+        fontFamily: 'Roboto-Medium'
     },
     avatar: {
         width: '100%',
         height: 320,
         marginTop: 5,
+        
+
     },
+
+
 });
